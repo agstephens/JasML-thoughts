@@ -8,6 +8,7 @@ cupy-cuda12x
 dask
 datasets
 evaluate
+flash-attn
 flax
 ipywidgets
 jax
