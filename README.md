@@ -48,7 +48,7 @@ python test-environment.py
 The output should look like:
 
 ```bash
-python test-jasml.py 
+$ python test-environment.py 
 
 Python 3.12.11 | packaged by conda-forge | (main, Jun  4 2025, 14:45:31) [GCC 13.3.0]
 
