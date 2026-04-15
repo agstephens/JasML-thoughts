@@ -1,145 +1,48 @@
-# "jaspy-ml" environment
+# JasML environment - initial thoughts
 
-## Clone a Jaspy env
+## First test - clone Jaspy and then install extra packages
 
+### Login to the interactive GPU node 
+
+We login to the interactive GPU node so that GPU-aware packages (like `torch`) will pick up the 
+existence of `CUDA` and enable GPU mode (which will run a lot faster than CPU mode).
+
+```bash
+ssh gpuhost001.jc.rl.ac.uk
 ```
-[astephen@sci-ph-02 astephen]$ /apps/jasmin/jaspy/miniforge_envs/jaspy3.12/mf3-25.3.0-3/bin/conda create --clone jaspy3.12-mf3-25.3.0-3-v20250704 --prefix /gws/smf/j04/cmip6_prep/users/astephen/jaspy-ml-v1
+
+### Clone a Jaspy env
+
+```bash
+/apps/jasmin/jaspy/miniforge_envs/jaspy3.12/mf3-25.3.0-3/bin/conda create --clone jaspy3.12-mf3-25.3.0-3-v20250704 --prefix /gws/smf/j04/cmip6_prep/users/astephen/jaspy-ml-v1
 ```
 
-## Pip install extra packages
+### Activate that conda environment
 
-
-On a GPU host, write the `requirements.yml` file below, and convert it with:
-
+```bash
+/apps/jasmin/jaspy/miniforge_envs/jaspy3.12/mf3-25.3.0-3/bin/conda activate /gws/smf/j04/cmip6_prep/users/astephen/jaspy-ml-v1
 ```
+
+### Pip install extra packages
+
+On a GPU host, start with the `requirements.yml` file below, and convert it to a `requirements.txt` file using this script:
+
+```bash
 python convert-reqs.py
 ```
 
-If you want the PyTorch CUDA index automatically:
+Pip install, specifiying the PyTorch CUDA index specifically:
 
-```
+```bash
 pip install --index-url https://download.pytorch.org/whl/cu124 --extra-index-url https://pypi.org/simple -r requirements.txt
 ```
 
-Here is the YAML file:
+### Test the main packages are there and CUDA is available
 
 ```bash
-$ cat jaspy-ml-requirements.yml
-
-# requirements.yml
-# A pip-oriented manifest for a single CUDA-capable ML environment.
-# Assumes NVIDIA drivers/CUDA are already present on the nodes.
-name: ml-gpu
-python: ">=3.10,<3.13"
-
-# Optional global pip args (keep here for documentation)
-pip_args:
-  # Use PyTorch CUDA 12.4 wheels; add PyPI as extra index.
-  - --index-url=https://download.pytorch.org/whl/cu124
-  - --extra-index-url=https://pypi.org/simple
-
-notes:
-  - PyTorch wheels here are the CUDA 12.4 builds from the official index.
-  - JAX uses the jax-cuda12-plugin (no local CUDA toolkits installed via pip).
-  - TensorFlow pip wheels include GPU support when system CUDA/driver is present.
-  - No CUDA toolkits/drivers are installed by this file.
-
-packages:
-  # ---- Core DL stacks (CUDA-capable) ----
-  - torch                 # from cu124 index (see pip_args)
-  - torchvision
-  - torchaudio
-  - tensorflow            # GPU-enabled wheel; uses system CUDA
-  - jax
-  - jax-cuda12-plugin     # new JAX GPU plugin for CUDA 12.x
-
-  # Trainers / multi-GPU helpers
-  - lightning
-  - accelerate
-
-  # JAX ecosystem
-  - flax
-  - optax
-  - orbax-checkpoint
-
-  # Speedups & GPU tooling (no CUDA installs here)
-  - cupy-cuda12x         # choose this if you want CuPy; else remove
-  - numba
-  - triton               # PyTorch kernel DSL
-  - xformers             # fast attention kernels (optional)
-  - bitsandbytes         # 8/4-bit quant (optional)
-
-  # Data & ETL
-  - numpy
-  - scipy
-  - pandas
-  - pyarrow
-  - polars
-  - dask
-  - rmm                  # RAPIDS memory manager (works without full RAPIDS)
-  - h5py
-  - zarr
-  - netCDF4
-  - h5netcdf
-
-  # Earth/atmos IO (common in your domain)
-  - xarray
-  - cfgrib
-  - eccodes
-  - rasterio
-  - rioxarray
-  - cartopy
-
-  # Classical ML & metrics
-  - scikit-learn
-  - statsmodels
-  - xgboost              # GPU-enabled by default if CUDA present
-  - lightgbm             # GPU build via pip wheel
-  - catboost
-  - torchmetrics
-  - evaluate
-
-  # NLP
-  - transformers
-  - tokenizers
-  - datasets
-  - sentencepiece
-
-  # Computer vision & augmentation
-  - opencv-python-headless
-  - albumentations
-  - timm
-
-  # Audio
-  - soundfile
-  - librosa
-
-  # Graph ML (pick one family; comment out the other)
-  - torch-geometric
-  - dgl-cu124            # or use this and remove torch-geometric
-
-  # Interop & inference
-  - onnx
-  - onnxruntime-gpu
-
-  # Experiment tracking & HPO
-  - mlflow
-  - wandb
-  - optuna
-
-  # Viz / notebooks
-  - matplotlib
-  - plotly
-  - jupyterlab
-  - ipywidgets
-
-  # Utilities often needed when building wheels/extensions
-  - cmake
-  - ninja
-  - pkgconfig
-  - typing-extensions
-  - setuptools
-  - wheel
-  - pip
-
+python test-packages.py
 ```
+
+
+
+
