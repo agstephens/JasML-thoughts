@@ -1,8 +1,12 @@
 # requirements.yml
 # A pip-oriented manifest for a single CUDA-capable ML environment.
 # Assumes NVIDIA drivers/CUDA are already present on the nodes.
-name: ml-gpu
+name: jasml
 python: ">=3.10,<3.13"
+
+# NOTE ON TESTING:
+# Retain the contents of the `test-environment.py` script and add
+# import tests for the rest of the packages.
 
 # Optional global pip args (keep here for documentation)
 pip_args:
@@ -30,8 +34,8 @@ packages:
   - accelerate
 
   # JAX ecosystem
-  - flax
-  - optax
+  - flax               
+  - optax              
   - orbax-checkpoint
 
   # Speedups & GPU tooling (no CUDA installs here)
@@ -40,27 +44,6 @@ packages:
   - triton               # PyTorch kernel DSL
   - xformers             # fast attention kernels (optional)
   - bitsandbytes         # 8/4-bit quant (optional)
-
-  # Data & ETL
-  - numpy
-  - scipy
-  - pandas
-  - pyarrow
-  - polars
-  - dask
-  - rmm                  # RAPIDS memory manager (works without full RAPIDS)
-  - h5py
-  - zarr
-  - netCDF4
-  - h5netcdf
-
-  # Earth/atmos IO (common in your domain)
-  - xarray
-  - cfgrib
-  - eccodes
-  - rasterio
-  - rioxarray
-  - cartopy
 
   # Classical ML & metrics
   - scikit-learn
@@ -83,13 +66,8 @@ packages:
   - albumentations
   - timm
 
-  # Audio
-  - soundfile
-  - librosa
-
   # Graph ML (pick one family; comment out the other)
   - torch-geometric
-  - dgl-cu124            # or use this and remove torch-geometric
 
   # Interop & inference
   - onnx
@@ -99,20 +77,5 @@ packages:
   - mlflow
   - wandb
   - optuna
-
-  # Viz / notebooks
-  - matplotlib
-  - plotly
-  - jupyterlab
-  - ipywidgets
-
-  # Utilities often needed when building wheels/extensions
-  - cmake
-  - ninja
-  - pkgconfig
-  - typing-extensions
-  - setuptools
-  - wheel
-  - pip
 
 
