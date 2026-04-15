@@ -76,6 +76,7 @@ packages:
   - tokenizers
   - datasets
   - sentencepiece
+  - flash-attn
 
   # Computer vision & augmentation
   - opencv-python-headless
